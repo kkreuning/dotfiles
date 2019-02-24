@@ -1,0 +1,12 @@
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
+	hist = log --pretty=format:'%h %as | %s%s [%an]' --graph --date=short
+[user]
+	name = Kay Kreuning
+	email = kkreuning@gmail.com
+[core]
+	excludesfile = ~/.gitignore_global
+

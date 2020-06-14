@@ -47,7 +47,6 @@ if type brew &>/dev/null; then
 fi
 
 # Always start tmux
-if [ -z "$TMUX" ]
-then
-    tmux attach -t TMUX || tmux new -s TMUX
+if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+    tmux attach -t default || tmux new -s default
 fi

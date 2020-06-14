@@ -1,12 +1,21 @@
 [alias]
-	co = checkout
-	ci = commit
 	st = status
+	ci = commit
+	co = checkout
 	br = branch
+	d = diff
 	hist = log --pretty=format:'%h %as | %s%s [%an]' --graph --date=short
+	last = log -1 HEAD
+	alias = "! git config --get-regexp ^alias\\. | cut -c7- | awk '{$1 = $1\" =\"; print}'"
+	rekt = reset --hard
+
 [user]
 	name = Kay Kreuning
-	email = kkreuning@gmail.com
+	email = kay.kreuning@ing.com
+
 [core]
 	excludesfile = ~/.gitignore_global
+	editor = code --wait
 
+[color]
+	ui = auto

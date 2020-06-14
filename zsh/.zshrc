@@ -1,43 +1,53 @@
-source ~/.zsh/exports.zsh
-source ~/.zsh/aliases.zsh
-source ~/.zsh/functions.zsh
+# Ignore compinit warnings
+ZSH_DISABLE_COMPFIX="true"
 
+# Allow antigen to change the prompt
+setopt prompt_subst
+
+# Antigen
 source /usr/local/share/antigen/antigen.zsh
 
 antigen use oh-my-zsh
 
-antigen bundles <<EOBUNDLES
-  brew
-  brew-cask
-  colored-man-pages
-  command-not-found
-  git
-  osx
-  marzocchi/zsh-notify
-  Tarrasch/zsh-autoenv
-  tmux
-  zsh-users/zsh-autosuggestions
-  zsh-users/zsh-completions
-  zsh-users/zsh-syntax-highlighting
-EOBUNDLES
+antigen bundle brew
+antigen bundle brew-cask
+antigen bundle command-not-found
+antigen bundle git
+antigen bundle zsh-autosuggestions
+antigen bundle zsh-users/zsh-syntax-highlighting
 
-antigen theme geometry-zsh/geometry
-
+antigen theme agnoster
 antigen apply
 
-# GPG agent
-gpgconf --launch gpg-agent
-gpg-connect-agent updatestartuptty /bye >> /dev/null
+# Exports
+export DEFAULT_USER=qg12lc
+export LC_ALL=en_US.UTF-8
+export SSH_AUTH_SOCK="/usr/local/var/run/yubikey-agent.sock"
+export PATH="/usr/local/opt/sqlite/bin:$PATH"
 
-# zsh-notify dogefy https://gist.github.com/marzocchi/14c47a49643389029a2026b4d4fec7ae
-zstyle ':notify:*' error-icon "https://media3.giphy.com/media/10ECejNtM1GyRy/200_s.gif"
-zstyle ':notify:*' error-title "wow such #fail"
-zstyle ':notify:*' success-icon "https://s-media-cache-ak0.pinimg.com/564x/b5/5a/18/b55a1805f5650495a74202279036ecd2.jpg"
-zstyle ':notify:*' success-title "very #success. wow"
+# Proxy settings, will NOT do something special for HTTPS, just assume it's the same
+export ALL_PROXY=`scutil --proxy | awk '\
+/HTTPEnable/ { enabled = $3; } \
+/HTTPProxy/ { server = $3; } \
+/HTTPPort/ { port = $3; } \
+END { if (enabled == "1") { print "http://" server ":" port; } }'`
 
-# Start in TMUX session
-if [ -z "$TMUX" ]
-then
-	tmux attach -t TMUX || tmux new -s TMUX
+export HTTP_PROXY=$ALL_PROXY
+export HTTPS_PROXY=$ALL_PROXY
+
+## Aliases
+alias ll='ls -AFgh'
+
+# Completions
+if type brew &>/dev/null; then
+    FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+
+    autoload -Uz compinit
+    compinit
 fi
 
+# Always start tmux
+if [ -z "$TMUX" ]
+then
+    tmux attach -t TMUX || tmux new -s TMUX
+fi

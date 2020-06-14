@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-/usr/bin/pkill -9 gpg-agent
-/usr/local/bin/gpgconf --launch gpg-agent
-
-exit $?
